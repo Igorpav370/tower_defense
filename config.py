@@ -1,0 +1,11 @@
+import pygame
+
+# === Настройки ===
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 640
+TILE_SIZE = 64
+FPS = 60
+WHITE = (255, 255, 255)
+TOWER_COST = 50
+BASE_HEALTH = 5
+MONEY = 100
