@@ -72,8 +72,7 @@ while running:
     pygame.display.flip()
 
     if game_over_screen() != False:
-        reset_money()
-        reset_base_health()
+        reset_game()
         towers.clear()
         bullets.clear()
         enemies.clear()

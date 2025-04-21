@@ -59,7 +59,7 @@ bullets = []
 
 def spawn_enemy():
     global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money
-
+    
     if current_wave >= len(waves):
         return
 
@@ -155,13 +155,24 @@ def get_money():
 def get_base_health():
     return base_health
 
-def reset_base_health():
-    global base_health
-    base_health=BASE_HEALTH
+def get_current_wave_number():
+    return current_wave + 1
 
-def reset_money():
+def reset_game():
+    global current_wave, spawn_timer, wave_in_progress, enemies, money
     global money
     money=MONEY
 
-def get_current_wave_number():
-    return current_wave + 1
+    global base_health
+    base_health=BASE_HEALTH
+
+    current_wave = 0
+    spawn_timer = 0
+    wave_in_progress = False
+    enemies.clear()
+    money = 100
+
+    # Сброс прогресса внутри волн
+    for wave in waves:
+        wave["group_index"] = 0
+        wave["group_spawned"] = 0
