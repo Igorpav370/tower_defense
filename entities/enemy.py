@@ -4,7 +4,7 @@ from config import TILE_SIZE
 
 
 class BaseEnemy:
-    def __init__(self, path, img, health=1, speed=1):
+    def __init__(self, path, img, health=1, speed=1, reward=10):
         self.path = path
         self.current_point = 0
         self.x, self.y = path[0]
@@ -14,6 +14,7 @@ class BaseEnemy:
         self.reached_end = False
         self.target_angle = 0
         self.current_angle = 0
+        self.reward = reward
 
     def update(self):
         if self.current_point < len(self.path) - 1:
@@ -54,13 +55,13 @@ class BaseEnemy:
 # --- Наследуемые враги:
 
 class BasicEnemy(BaseEnemy):
-    def __init__(self, path, img):
-        super().__init__(path, img, health=3, speed=2)
+    def __init__(self, path, image):
+        super().__init__(path, image, health=3, speed=2, reward=10)
 
 class TankEnemy(BaseEnemy):
-    def __init__(self, path, img):
-        super().__init__(path, img, health=8, speed=1)
+    def __init__(self, path, image):
+        super().__init__(path, image, health=5, speed=1.2, reward=25)
 
 class FastEnemy(BaseEnemy):
-    def __init__(self, path, img):
-        super().__init__(path, img, health=2, speed=3.5)
+    def __init__(self, path, image):
+        super().__init__(path, image, health=2, speed=2.5, reward=15)

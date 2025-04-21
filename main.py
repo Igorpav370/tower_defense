@@ -40,7 +40,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            print('click')
             mx, my = pygame.mouse.get_pos()
             grid_x = mx // TILE_SIZE
             grid_y = my // TILE_SIZE

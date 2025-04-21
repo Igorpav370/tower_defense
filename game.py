@@ -58,7 +58,7 @@ towers = []
 bullets = []
 
 def spawn_enemy():
-    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies
+    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money
 
     if current_wave >= len(waves):
         return
@@ -78,6 +78,7 @@ def spawn_enemy():
             current_wave += 1
             spawn_timer = -wave_cooldown
             wave_in_progress = False
+            money += 50 + current_wave * 5
         return
 
     group = enemy_groups[wave["group_index"]]
@@ -112,7 +113,7 @@ def update_game():
             base_health -= 1
             enemies.remove(enemy)
         elif enemy.health <= 0:  # Если враг убит
-            money += 10
+            money += enemy.reward
             enemies.remove(enemy)
 
     for tower in towers:
