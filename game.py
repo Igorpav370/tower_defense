@@ -94,3 +94,10 @@ def get_money():
 def get_base_health():
     return base_health
 
+def reset_base_health():
+    global base_health
+    base_health=BASE_HEALTH
+
+def reset_money():
+    global money
+    money=MONEY

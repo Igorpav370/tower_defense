@@ -1,4 +1,3 @@
-# main.py
 import pygame
 
 
@@ -9,10 +8,28 @@ pygame.display.set_caption("Tower Defense")
 clock = pygame.time.Clock()
 
 
-# Теперь можно импортировать модули, которые используют pygame
 from game import *
 from config import *
-from ui import draw_ui
+from ui import draw_ui, draw_game_over
+
+def game_over_screen():
+    if get_base_health() > 0:
+        return False
+    while True:
+        retry_rect, quit_rect = draw_game_over(window)
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if retry_rect.collidepoint(event.pos):
+                    return True  # Перезапустить
+                elif quit_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
+
 
 # Основной игровой цикл
 running = True
@@ -53,14 +70,15 @@ while running:
 
     draw_ui(window, get_money(), get_base_health())
 
-
     pygame.display.flip()
 
-    # Если здоровье базы 0, выводим GAME OVER
-    if get_base_health() <= 0:
-        draw_ui(window, get_money(), get_base_health())
-        pygame.display.flip()
-        pygame.time.delay(3000)
-        running = False
+    if game_over_screen() != False:
+        from game import reset_base_health, reset_money, towers, bullets, enemies
+        # Сброс состояния
+        reset_money()
+        reset_base_health()
+        towers.clear()
+        bullets.clear()
+        enemies.clear()
 
 pygame.quit()
