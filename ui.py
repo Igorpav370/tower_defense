@@ -1,11 +1,14 @@
 import pygame
 from config import *
+from game import get_current_wave_number
 
 font = pygame.font.SysFont("arial", 24)
 
 def draw_ui(surface, money, base_health):
     money_text = font.render(f"Money: {money}", True, (0, 0, 0))
     health_text = font.render(f"Base HP: {base_health}", True, (200, 0, 0))
+    wave_text = font.render(f"Wave: {get_current_wave_number()}", True, (0, 0, 0))
+    surface.blit(wave_text, (10, 70))
     surface.blit(money_text, (10, 10))
     surface.blit(health_text, (10, 40))
 

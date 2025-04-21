@@ -28,16 +28,44 @@ path_pixels = [(x * TILE_SIZE, y * TILE_SIZE) for x, y in path_points]
 money = MONEY
 base_health = BASE_HEALTH
 spawn_timer = 0
-enemies = [Enemy(path_pixels, enemy_img)]
+enemies = []
+waves = level_data["waves"]
+current_wave = 0
+spawned_enemies = 0
+spawn_timer = 0
+wave_cooldown = 180  # Пауза между волнами
+wave_in_progress = False
+
 towers = []
 bullets = []
 
 def spawn_enemy():
-    global spawn_timer
-    spawn_timer += 1
-    if spawn_timer > 120 and len(enemies) < 10:
-        enemies.append(Enemy(path_pixels, enemy_img))
-        spawn_timer = 0
+    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies
+
+    if current_wave >= len(waves):
+        return  # Все волны завершены
+
+    wave = waves[current_wave]
+    count = wave["count"]
+    health = wave.get("health", 3)
+    speed = wave.get("speed", 2)
+
+    if spawned_enemies < count:
+        spawn_timer += 1
+        spawn_rate = wave.get("spawn_rate", 60)
+        if spawn_timer >= spawn_rate:
+            enemies.append(Enemy(path_pixels, enemy_img, health=health, speed=speed))
+            spawned_enemies += 1
+            spawn_timer = 0
+            wave_in_progress = True
+
+    # Если волна заспавнена полностью и врагов не осталось — переходим к следующей
+    elif not enemies:
+        current_wave += 1
+        spawned_enemies = 0
+        spawn_timer = -wave_cooldown  # Задержка перед следующей волной
+        wave_in_progress = False
+
 
 
 def update_game():
@@ -101,3 +129,7 @@ def reset_base_health():
 def reset_money():
     global money
     money=MONEY
+
+def get_current_wave_number():
+    return current_wave + 1
+
