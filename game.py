@@ -12,13 +12,32 @@ tileset = {
     " ": pygame.image.load(assets_dir / "tiles" / "grass.png"),
     "#": pygame.image.load(assets_dir / "tiles" / "path.png")
 }
+# Загрузка изображений башен
 tower_images = {
     "basic": pygame.image.load(assets_dir / "towers" / "basic_tower.png"),
     "advanced": pygame.image.load(assets_dir / "towers" / "advanced_tower.png"),
 }
+# Загрузка изображений пуль
 bullet_images = {
     "basic": pygame.image.load(assets_dir / "towers" / "bullet.png").convert_alpha(),
     "advanced": pygame.image.load(assets_dir / "towers" / "advanced_bullet.png").convert_alpha(),            
+}
+# Загрузка изображений врагов
+enemy_images = {
+    "basic": pygame.image.load(assets_dir / "enemies" / "basic_enemy2.png").convert_alpha(),
+    "tank": pygame.image.load(assets_dir / "enemies" / "tank_enemy.png").convert_alpha(),
+    "fast": pygame.image.load(assets_dir / "enemies" / "fast_enemy.png").convert_alpha(),
+}
+# Сопоставление типа врага и класса
+enemy_classes = {
+    "basic": BasicEnemy,
+    "tank": TankEnemy,
+    "fast": FastEnemy,
+}
+# Сопоставление типа башни и класса
+tower_classes = {
+    "basic": BasicTower,
+    "advanced": AdvancedTower,
 }
 
 # === Загрузка карты ===
@@ -29,26 +48,7 @@ tilemap = level_data["tilemap"]
 path_points = utils.generate_path(tilemap)
 path_pixels = [(x * TILE_SIZE, y * TILE_SIZE) for x, y in path_points]
 
-# Загрузка изображений врагов
-enemy_images = {
-    "basic": pygame.image.load(assets_dir / "enemies" / "basic_enemy2.png").convert_alpha(),
-    "tank": pygame.image.load(assets_dir / "enemies" / "tank_enemy.png").convert_alpha(),
-    "fast": pygame.image.load(assets_dir / "enemies" / "fast_enemy.png").convert_alpha(),
-}
-
-# Сопоставление типа врага и класса
-enemy_classes = {
-    "basic": BasicEnemy,
-    "tank": TankEnemy,
-    "fast": FastEnemy,
-}
-
-tower_classes = {
-    "basic": BasicTower,
-    "advanced": AdvancedTower,
-}
-
-# Игровые переменные
+# === Игровые переменные ===
 money = MONEY
 base_health = BASE_HEALTH
 spawn_timer = 0
@@ -59,14 +59,16 @@ spawned_enemies = 0
 spawn_timer = 0
 wave_cooldown = 180  # Пауза между волнами
 wave_in_progress = False
+win_game = False
 
 towers = []
 bullets = []
 
 def spawn_enemy():
-    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money
+    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money, win_game
     
     if current_wave >= len(waves):
+        win_game = True
         return
 
     wave = waves[current_wave]
@@ -158,9 +160,6 @@ def place_tower(pos, tower_type="advanced"):
     return False
 
 
-
-
-
 def get_money():
     return money
 
@@ -169,6 +168,9 @@ def get_base_health():
 
 def get_current_wave_number():
     return current_wave + 1
+
+def get_win_status():
+    return win_game
 
 def reset_game():
     global current_wave, spawn_timer, wave_in_progress, enemies, money

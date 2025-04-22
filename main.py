@@ -7,10 +7,7 @@ clock = pygame.time.Clock()
 
 from game import *
 from config import *
-from ui import draw_ui, draw_game_over, draw_tower_menu
-
-# Инициализация Pygame и создание окна
-
+from ui import draw_ui, draw_game_over, draw_tower_menu, draw_game_win
 
 # Для меню выбора башни
 tower_menu_visible = False
@@ -35,6 +32,27 @@ def game_over_screen():
                     pygame.quit()
                     exit()
 
+
+def game_win_screen():
+    if not get_win_status():
+        return False
+    while True:
+        print('WIN!!!')
+        retry_rect, quit_rect = draw_game_win(window)
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if retry_rect.collidepoint(event.pos):
+                    return True  # Перезапустить
+                elif quit_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
+
+
 # Функция для обработки клика по меню башен
 def handle_tower_menu_click(mx, my):
     global selected_tower_type, tower_menu_visible
@@ -46,6 +64,7 @@ def handle_tower_menu_click(mx, my):
             selected_tower_type = tower_type
             tower_menu_visible = False
             break
+    tower_menu_visible = False
 
 # Основной игровой цикл
 running = True
@@ -66,8 +85,7 @@ while running:
                     handle_tower_menu_click(mx, my)
                 elif selected_tower_type:
                     # Установка башни с выбранным типом
-                    if place_tower(event.pos, selected_tower_type):
-                        selected_tower_type = None
+                    place_tower(event.pos, selected_tower_type)
 
     # Обновление игры
     enemies = update_game()
@@ -92,7 +110,7 @@ while running:
         enemy.draw(window)
 
     # Отрисовка UI
-    draw_ui(window, get_money(), get_base_health())
+    draw_ui(window, get_money(), get_base_health(), selected_tower_type)
 
     # Отрисовка контекстного меню башен
     if tower_menu_visible:
@@ -100,7 +118,7 @@ while running:
 
     pygame.display.flip()
 
-    if game_over_screen() != False:
+    if game_over_screen() != False or game_win_screen() != False:
         reset_game()
         towers.clear()
         bullets.clear()

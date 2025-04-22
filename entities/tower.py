@@ -5,7 +5,7 @@ from entities.bullet import BasicBullet, AdvancedBullet
 
 
 class BaseTower:
-    def __init__(self, x, y, image, bullet_class=BasicBullet, bullet_img=None, cost=50):
+    def __init__(self, x, y, image=None, bullet_class=BasicBullet, bullet_img=None, cost=50):
         self.x = x
         self.y = y
         self.image = image
@@ -74,14 +74,14 @@ class BaseTower:
 
 
 class BasicTower(BaseTower):
-    def __init__(self, x, y, image, bullet_img):
+    def __init__(self, x, y, image=None, bullet_img=None):
         super().__init__(x, y, image, bullet_class=BasicBullet, bullet_img=bullet_img)
         self.range = 100
         self.cooldown = 60
         self.cost = 50
 
 class AdvancedTower(BaseTower):
-    def __init__(self, x, y, image, bullet_img):
+    def __init__(self, x, y, image=None, bullet_img=None):
         super().__init__(x, y, image, bullet_class=AdvancedBullet, bullet_img=bullet_img)
         self.range = 100
         self.cooldown = 60
