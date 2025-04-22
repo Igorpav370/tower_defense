@@ -1,6 +1,6 @@
 import pygame
 from config import *
-from game import get_current_wave_number
+from game import *
 
 font = pygame.font.SysFont("arial", 24)
 
@@ -38,3 +38,14 @@ def draw_game_over(surface):
     surface.blit(quit_text, (quit_rect.x + 70, quit_rect.y + 10))
 
     return retry_rect, quit_rect
+
+def draw_tower_menu(surface, menu_pos):
+    tx, ty = menu_pos
+    for i, tower_type in enumerate(tower_classes.keys()):
+        rect = pygame.Rect(tx, ty + i * 40, 100, 35)
+        pygame.draw.rect(surface, (50, 50, 50), rect)
+        pygame.draw.rect(surface, (200, 200, 200), rect, 2)
+
+        font = pygame.font.SysFont(None, 24)
+        label = font.render(tower_type.capitalize(), True, (255, 255, 255))
+        surface.blit(label, (rect.x + 10, rect.y + 8))

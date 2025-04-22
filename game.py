@@ -2,8 +2,7 @@ import pygame
 import json
 import utils
 from entities.enemy import BasicEnemy, TankEnemy, FastEnemy
-from entities.tower import Tower
-from entities.bullet import Bullet
+from entities.tower import BasicTower, AdvancedTower
 from config import *
 from pathlib import Path
 
@@ -13,9 +12,14 @@ tileset = {
     " ": pygame.image.load(assets_dir / "tiles" / "grass.png"),
     "#": pygame.image.load(assets_dir / "tiles" / "path.png")
 }
-enemy_img = pygame.image.load(assets_dir / "enemies" / "basic_enemy2.png")
-tower_img = pygame.image.load(assets_dir / "towers" / "basic_tower.png")
-bullet_img = pygame.image.load(assets_dir / "towers" / "bullet.png").convert_alpha()
+tower_images = {
+    "basic": pygame.image.load(assets_dir / "towers" / "basic_tower.png"),
+    "advanced": pygame.image.load(assets_dir / "towers" / "advanced_tower.png"),
+}
+bullet_images = {
+    "basic": pygame.image.load(assets_dir / "towers" / "bullet.png").convert_alpha(),
+    "advanced": pygame.image.load(assets_dir / "towers" / "advanced_bullet.png").convert_alpha(),            
+}
 
 # === Загрузка карты ===
 with open("levels/level1.json", "r") as f:
@@ -39,8 +43,10 @@ enemy_classes = {
     "fast": FastEnemy,
 }
 
-tower_img = pygame.image.load(assets_dir / "towers" / "basic_tower.png")
-bullet_img = pygame.image.load(assets_dir / "towers" / "bullet.png").convert_alpha()
+tower_classes = {
+    "basic": BasicTower,
+    "advanced": AdvancedTower,
+}
 
 # Игровые переменные
 money = MONEY
@@ -123,30 +129,36 @@ def update_game():
     return enemies
 
 
-def place_tower(pos):
+def place_tower(pos, tower_type="advanced"):
     global money, towers
 
     x, y = pos
     grid_x = x // TILE_SIZE
     grid_y = y // TILE_SIZE
 
-    # Проверяем возможность установки
     if (0 <= grid_y < len(tilemap) and (0 <= grid_x < len(tilemap[0]))):
-        if tilemap[grid_y][grid_x] == " " and money >= TOWER_COST:
+        if tilemap[grid_y][grid_x] == " ":
             for tower in towers:
                 if (tower.x // TILE_SIZE) == grid_x and (tower.y // TILE_SIZE) == grid_y:
                     return False
 
+            tower_class = tower_classes.get(tower_type, AdvancedTower)
+            tower_image = tower_images.get(tower_type, tower_images["advanced"])
+            bullet_image = bullet_images.get(tower_type, bullet_images["basic"])
 
-    # Устанавливаем башню
-            px = grid_x * TILE_SIZE
-            py = grid_y * TILE_SIZE
-            towers.append(Tower(px, py, tower_img, bullet_img))
-            money -= TOWER_COST
-            return True
-
+            # ← Создаём временный объект, чтобы узнать цену
+            temp_tower = tower_class(-1000, -1000, tower_image, bullet_img=bullet_image)
+            if money >= temp_tower.cost:
+                px = grid_x * TILE_SIZE
+                py = grid_y * TILE_SIZE
+                towers.append(tower_class(px, py, tower_image, bullet_img=bullet_image))
+                money -= temp_tower.cost
+                return True
 
     return False
+
+
+
 
 
 def get_money():

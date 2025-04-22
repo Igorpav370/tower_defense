@@ -1,15 +1,21 @@
 import pygame
 
-# Инициализация Pygame и создание окна
 pygame.init()
 window = pygame.display.set_mode((640, 640))  # Используйте WINDOW_WIDTH и WINDOW_HEIGHT из config.py
 pygame.display.set_caption("Tower Defense")
 clock = pygame.time.Clock()
 
-
 from game import *
 from config import *
-from ui import draw_ui, draw_game_over
+from ui import draw_ui, draw_game_over, draw_tower_menu
+
+# Инициализация Pygame и создание окна
+
+
+# Для меню выбора башни
+tower_menu_visible = False
+tower_menu_pos = (0, 0)
+selected_tower_type = None
 
 def game_over_screen():
     if get_base_health() > 0:
@@ -29,6 +35,17 @@ def game_over_screen():
                     pygame.quit()
                     exit()
 
+# Функция для обработки клика по меню башен
+def handle_tower_menu_click(mx, my):
+    global selected_tower_type, tower_menu_visible
+    tx, ty = tower_menu_pos
+
+    for i, tower_type in enumerate(tower_classes.keys()):
+        button_rect = pygame.Rect(tx, ty + i * 40, 100, 35)
+        if button_rect.collidepoint(mx, my):
+            selected_tower_type = tower_type
+            tower_menu_visible = False
+            break
 
 # Основной игровой цикл
 running = True
@@ -39,11 +56,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mx, my = pygame.mouse.get_pos()
-            grid_x = mx // TILE_SIZE
-            grid_y = my // TILE_SIZE
-            place_tower((grid_x * TILE_SIZE, grid_y * TILE_SIZE))
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 3:  # Правая кнопка мыши
+                tower_menu_visible = True
+                tower_menu_pos = event.pos
+            elif event.button == 1:  # Левая кнопка мыши
+                if tower_menu_visible:
+                    mx, my = event.pos
+                    handle_tower_menu_click(mx, my)
+                elif selected_tower_type:
+                    # Установка башни с выбранным типом
+                    if place_tower(event.pos, selected_tower_type):
+                        selected_tower_type = None
 
     # Обновление игры
     enemies = update_game()
@@ -67,7 +91,12 @@ while running:
     for enemy in enemies:
         enemy.draw(window)
 
+    # Отрисовка UI
     draw_ui(window, get_money(), get_base_health())
+
+    # Отрисовка контекстного меню башен
+    if tower_menu_visible:
+        draw_tower_menu(window, tower_menu_pos)
 
     pygame.display.flip()
 
