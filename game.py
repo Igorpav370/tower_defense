@@ -183,19 +183,16 @@ def get_enemies_left():
     return enemies_left
 
 def reset_game():
-    global current_wave, spawn_timer, wave_in_progress, enemies, money, enemies_left
-    global money
+    global current_wave, spawn_timer, wave_in_progress, enemies, money, enemies_left, base_health, money, win_game
     money=MONEY
-
-    global base_health
     base_health=BASE_HEALTH
-
     current_wave = 0
     spawn_timer = 0
     wave_in_progress = False
     enemies.clear()
     money = 100
     enemies_left = utils.get_total_enemies_in_wave(0, waves)
+    win_game = False
 
     # Сброс прогресса внутри волн
     for wave in waves:

@@ -1,14 +1,15 @@
 import pygame
 from config import *
 from game import *
+import utils
 
 font = pygame.font.SysFont("arial", 24)
 
 def draw_ui(surface, money, base_health, selected_tower_type):
     money_text = font.render(f"Money: {money}", True, (0, 0, 0))
     health_text = font.render(f"Base HP: {base_health}", True, (200, 0, 0))
-    wave_text = font.render(f"Wave: {get_current_wave_number()}", True, (0, 0, 0))
-    left_text = font.render(f"Enemies left: {get_enemies_left()}", True, (0, 0, 0))
+    wave_text = font.render(f"Wave: {get_current_wave_number()} / {len(waves)}", True, (0, 0, 0))
+    left_text = font.render(f"Enemies left: {get_enemies_left()} / {utils.get_total_enemies_in_wave(get_current_wave_number() - 1, waves)}", True, (0, 0, 0))
     
     surface.blit(money_text, (10, 10))
     surface.blit(health_text, (10, 40))

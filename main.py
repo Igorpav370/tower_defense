@@ -117,7 +117,7 @@ while running:
 
     pygame.display.flip()
 
-    if game_over_screen() != False or game_win_screen() != False:
+    if game_over_screen() or game_win_screen():
         reset_game()
         towers.clear()
         bullets.clear()
