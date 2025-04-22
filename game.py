@@ -49,11 +49,14 @@ path_points = utils.generate_path(tilemap)
 path_pixels = [(x * TILE_SIZE, y * TILE_SIZE) for x, y in path_points]
 
 # === Игровые переменные ===
+auto_generation = True # Переключает режим авто / ручной из файла level1.json
+total_waves = 10
+
 money = MONEY
 base_health = BASE_HEALTH
 spawn_timer = 0
 enemies = []
-waves = level_data["waves"]
+waves = utils.generate_waves(auto_generation, total_waves)
 current_wave = 0
 spawned_enemies = 0
 spawn_timer = 0
