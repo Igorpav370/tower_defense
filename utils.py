@@ -129,3 +129,12 @@ def generate_path(tilemap):
 
     return path
 
+def get_total_enemies_in_wave(wave_index, waves):
+    if wave_index >= len(waves):
+        return 0
+    
+    wave = waves[wave_index]
+    total = 0
+    for group in wave["enemies"]:
+        total += group["count"]
+    return total

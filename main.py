@@ -37,7 +37,6 @@ def game_win_screen():
     if not get_win_status():
         return False
     while True:
-        print('WIN!!!')
         retry_rect, quit_rect = draw_game_win(window)
         pygame.display.flip()
 

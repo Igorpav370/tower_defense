@@ -60,12 +60,13 @@ spawn_timer = 0
 wave_cooldown = 180  # Пауза между волнами
 wave_in_progress = False
 win_game = False
+enemies_left = utils.get_total_enemies_in_wave(0, waves)
 
 towers = []
 bullets = []
 
 def spawn_enemy():
-    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money, win_game
+    global spawn_timer, spawned_enemies, current_wave, wave_in_progress, enemies, money, win_game, enemies_left
     
     if current_wave >= len(waves):
         win_game = True
@@ -87,6 +88,7 @@ def spawn_enemy():
             spawn_timer = -wave_cooldown
             wave_in_progress = False
             money += 50 + current_wave * 5
+            enemies_left = utils.get_total_enemies_in_wave(current_wave, waves)
         return
 
     group = enemy_groups[wave["group_index"]]
@@ -110,7 +112,7 @@ def spawn_enemy():
 
 
 def update_game():
-    global enemies, base_health, money
+    global enemies, base_health, money, enemies_left
 
     for bullet in bullets[:]:
         if not bullet.update():
@@ -120,9 +122,11 @@ def update_game():
         if enemy.update():  # Если враг достиг конца
             base_health -= 1
             enemies.remove(enemy)
+            enemies_left -= 1
         elif enemy.health <= 0:  # Если враг убит
             money += enemy.reward
             enemies.remove(enemy)
+            enemies_left -= 1
 
     for tower in towers:
         tower.update(enemies, bullets)
@@ -172,8 +176,11 @@ def get_current_wave_number():
 def get_win_status():
     return win_game
 
+def get_enemies_left():
+    return enemies_left
+
 def reset_game():
-    global current_wave, spawn_timer, wave_in_progress, enemies, money
+    global current_wave, spawn_timer, wave_in_progress, enemies, money, enemies_left
     global money
     money=MONEY
 
@@ -185,6 +192,7 @@ def reset_game():
     wave_in_progress = False
     enemies.clear()
     money = 100
+    enemies_left = utils.get_total_enemies_in_wave(0, waves)
 
     # Сброс прогресса внутри волн
     for wave in waves:

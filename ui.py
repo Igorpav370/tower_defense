@@ -8,10 +8,12 @@ def draw_ui(surface, money, base_health, selected_tower_type):
     money_text = font.render(f"Money: {money}", True, (0, 0, 0))
     health_text = font.render(f"Base HP: {base_health}", True, (200, 0, 0))
     wave_text = font.render(f"Wave: {get_current_wave_number()}", True, (0, 0, 0))
-
-    surface.blit(wave_text, (10, 70))
+    left_text = font.render(f"Enemies left: {get_enemies_left()}", True, (0, 0, 0))
+    
     surface.blit(money_text, (10, 10))
     surface.blit(health_text, (10, 40))
+    surface.blit(wave_text, (10, 70))
+    surface.blit(left_text, (10, 100))
 
     for i, (tower_type, tower_img) in enumerate(tower_images.items()):
         tower_x = 10 + i * (40 + 40)
