@@ -1,12 +1,12 @@
 import pygame
+from config import *
 
 pygame.init()
-window = pygame.display.set_mode((640, 640))  # Используйте WINDOW_WIDTH и WINDOW_HEIGHT из config.py
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Tower Defense")
 clock = pygame.time.Clock()
 
 from game import *
-from config import *
 from ui import draw_ui, draw_game_over, draw_tower_menu, draw_game_win
 
 # Для меню выбора башни

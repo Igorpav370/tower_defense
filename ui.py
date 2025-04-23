@@ -18,7 +18,7 @@ def draw_ui(surface, money, base_health, selected_tower_type):
 
     for i, (tower_type, tower_img) in enumerate(tower_images.items()):
         tower_x = 10 + i * (40 + 40)
-        tower_y = 540
+        tower_y = WINDOW_HEIGHT - 100
         
         tower_class = tower_classes[tower_type]
         tower_image = tower_images.get(tower_type)
