@@ -19,8 +19,8 @@ tower_images = {
 }
 # Загрузка изображений пуль
 bullet_images = {
-    "basic": pygame.image.load(assets_dir / "towers" / "bullet.png").convert_alpha(),
-    "advanced": pygame.image.load(assets_dir / "towers" / "advanced_bullet.png").convert_alpha(),            
+    "basic": pygame.image.load(assets_dir / "bullets" / "bullet.png").convert_alpha(),
+    "advanced": pygame.image.load(assets_dir / "bullets" / "advanced_bullet.png").convert_alpha(),            
 }
 # Загрузка изображений врагов
 enemy_images = {
